@@ -5,7 +5,7 @@
 ### Capture your Data Object and Accompanying PDIs
 
 - Data Object 
-![Image for data object](./images/dataobject.png)
+![Image for data object](./images/dataobject.png | width=100)
 - Provenance 
 
 - Fixity 
