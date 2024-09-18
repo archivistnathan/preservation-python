@@ -55,5 +55,52 @@
 
 
 Preservation Python is a snake-type game where the player controls a continually shrinking python, a metaphor for obsolescence and data loss. The python must ingest, pun intended, content and preservation information while avoiding elements that accelerate data loss. If the python survives a certain length of time, the required elements will change into preservation actions needed to maintain continued access.
+
 The game is meant to introduce the elements of an OAIS Archival Information Package to beginners in a fun and interactive way, as well as to present digital preservation as a continuous activity. The fast-paced nature of a snake game also encourages the player to make decisions on which elements they prefer to prioritise.
-The game is a product of the Bits and Bots study group (https://github.com/Lotte-W/Bits-and-Bots-study- group).
+
+The game is a product of the Bits and Bots study group (https://github.com/Lotte-W/Bits-and-Bots-study-group).
+
+** Credits:**
+
+The base code is adapted from Snake Game by Edureka. I wouldn't have figured out food collissions otherwise!
+
+** Assets **
+
+<a href="https://www.flaticon.com/free-icons/database" title="database icons">Database icons created by Freepik - Flaticon</a>
+
+<a href="https://www.flaticon.com/free-icons/copy-link" title="copy link icons">Copy link icons created by Freepik - Flaticon</a>
+
+<a href="https://www.flaticon.com/free-icons/proven" title="proven icons">Proven icons created by Dewi Sari - Flaticon</a>
+
+<a href="https://www.flaticon.com/free-icons/validation" title="validation icons">Validation icons created by Iconjam - Flaticon</a>
+
+<a href="https://www.flaticon.com/free-icons/context" title="context icons">Context icons created by Freepik - Flaticon</a>
+
+<a href="https://www.flaticon.com/free-icons/access" title="access icons">Access icons created by Pixel perfect - Flaticon</a>
+
+<a href="https://www.flaticon.com/free-icons/cms" title="cms icons">Cms icons created by Freepik - Flaticon</a>
+
+<a href="https://www.flaticon.com/free-icons/packing" title="packing icons">Packing icons created by xnimrodx - Flaticon</a>
+
+<a href="https://www.flaticon.com/free-icons/obsolete" title="obsolete icons">Obsolete icons created by Freepik - Flaticon</a>
+
+<a href="https://www.flaticon.com/free-icons/delete" title="delete icons">Delete icons created by Kiranshastry - Flaticon</a>
+
+<a href="https://www.flaticon.com/free-icons/broken" title="broken icons">Broken icons created by Smashicons - Flaticon</a>
+
+<a href="https://www.flaticon.com/free-icons/threat" title="threat icons">Threat icons created by Vectors Tank - Flaticon</a>
+
+<a href="https://www.flaticon.com/free-icons/legal" title="legal icons">Legal icons created by Uniconlabs - Flaticon</a>
+
+<a href="https://www.flaticon.com/free-icons/thumbs-down" title="thumbs down icons">Thumbs down icons created by Freepik - Flaticon</a>
+
+<a href="https://www.flaticon.com/free-icons/social-media" title="social media icons">Social media icons created by Freepik - Flaticon</a>
+
+<a href="https://www.flaticon.com/free-icons/view" title="view icons">View icons created by DinosoftLabs - Flaticon</a>
+
+<a href="https://www.flaticon.com/free-icons/data-transfer" title="data transfer icons">Data transfer icons created by Freepik - Flaticon</a>
+
+<a href="https://www.flaticon.com/free-icons/virtual-desktop" title="virtual desktop icons">Virtual desktop icons created by LAFS - Flaticon</a>
+
+<a href="https://www.flaticon.com/free-icons/backup" title="backup icons">Backup icons created by surang - Flaticon</a>
+
