@@ -57,6 +57,7 @@ _The game is a product of the Bits and Bots study group (https://github.com/Lott
 - Backups
 
 _Each PDI or preservation action increases your score. Obsolescence and data loss will halve your current score._
+
 __The game ends when your score goes below 1.__
 
 
