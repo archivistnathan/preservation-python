@@ -1,10 +1,10 @@
 # Welcome to Preservation Python
 
-*Preservation Python is a snake-type game where the player controls a continually shrinking python, a metaphor for obsolescence and data loss. The python must ingest, pun intended, content and preservation information while avoiding elements that accelerate data loss. If the python survives a certain length of time, the required elements will change into preservation actions needed to maintain continued access.
+_Preservation Python is a snake-type game where the player controls a continually shrinking python, a metaphor for obsolescence and data loss. The python must ingest, pun intended, content and preservation information while avoiding elements that accelerate data loss. If the python survives a certain length of time, the required elements will change into preservation actions needed to maintain continued access._
 
-The game is meant to introduce the elements of an OAIS Archival Information Package to beginners in a fun and interactive way, as well as to present digital preservation as a continuous activity. The fast-paced nature of a snake game also encourages the player to make decisions on which elements they prefer to prioritise.
+_The game is meant to introduce the elements of an OAIS Archival Information Package to beginners in a fun and interactive way, as well as to present digital preservation as a continuous activity. The fast-paced nature of a snake game also encourages the player to make decisions on which elements they prefer to prioritise._
 
-The game is a product of the Bits and Bots study group (https://github.com/Lotte-W/Bits-and-Bots-study-group).*
+_The game is a product of the Bits and Bots study group (https://github.com/Lotte-W/Bits-and-Bots-study-group)._
 
 ## Ingest Preservation Information and avoid preservation failure!
 
@@ -56,15 +56,15 @@ The game is a product of the Bits and Bots study group (https://github.com/Lotte
 
 - Backups
 
-* Each PDI or preservation action increases your score. Obsolescence and data loss will halve your current score. *
-## The game ends when your score goes below 1.
+_Each PDI or preservation action increases your score. Obsolescence and data loss will halve your current score._
+__The game ends when your score goes below 1.__
 
 
-** Credits:**
+## Credits:
 
 The base code is adapted from Snake Game by Edureka. I wouldn't have figured out food collissions otherwise!
 
-** Assets **
+Game assets from Flaticon:
 
 <a href="https://www.flaticon.com/free-icons/database" title="database icons">Database icons created by Freepik - Flaticon</a>
 
