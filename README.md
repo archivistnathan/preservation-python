@@ -60,10 +60,19 @@ _Each PDI or preservation action increases your score. Obsolescence and data los
 
 __The game ends when your score goes below 1.__
 
+## Installations
+
+Download preservation.py and the iamges folder.
+
+Make sure you have Python3 installed. Add pygame using pip3.
+
+Navigate to the folder containing preservation.py and run with Python3.
+
+Enjoy!
 
 ## Credits:
 
-The base code is adapted from Snake Game by Edureka. I wouldn't have figured out food collissions otherwise!
+The base code is adapted from Snake Game by Edureka. I wouldn't have figured out food collisions otherwise!
 
 Game assets from Flaticon:
 
