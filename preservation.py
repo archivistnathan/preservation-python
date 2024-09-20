@@ -140,7 +140,8 @@ def gameLoop():
         message("Collect preservation information.", white, -100)
         message("Avoid data loss and obsolescence.", white)
         message("Maintain accessibility!", white, 100)
-        message("Use the arrow keys to move. Press the SPACEBAR to start", green, 200)
+        message("Use the arrow keys or W,A,S,D to move.", yellow, 200)
+        message("Press the SPACEBAR to start", green, 250)
 
         pygame.display.update()
 
@@ -158,10 +159,10 @@ def gameLoop():
         while game_close:
             dis.fill(blue)
             message("Preservation Failure! The digital object is lost.", red)
-            message("Press R to Play Again or Q-Quit", red, +50)
+            message("Press R to Play Again or Q to Quit", green, +50)
             Your_score(Length_of_snake - 1)  # Update the score display
             pygame.display.update()
-            
+
             for event in pygame.event.get():
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_q:
@@ -169,24 +170,25 @@ def gameLoop():
                         game_close = False
                     if event.key == pygame.K_r:
                         gameLoop()
-                        
+
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 game_over = True
             if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_LEFT:
+                # Handle arrow keys and W,A,S,D keys
+                if event.key == pygame.K_LEFT or event.key == pygame.K_a:
                     x1_change = -snake_block
-                    y1_change = 0 
-                elif event.key == pygame.K_RIGHT:
+                    y1_change = 0
+                elif event.key == pygame.K_RIGHT or event.key == pygame.K_d:
                     x1_change = snake_block
                     y1_change = 0
-                elif event.key == pygame.K_UP:
+                elif event.key == pygame.K_UP or event.key == pygame.K_w:
                     y1_change = -snake_block
                     x1_change = 0
-                elif event.key == pygame.K_DOWN:
+                elif event.key == pygame.K_DOWN or event.key == pygame.K_s:
                     y1_change = snake_block
                     x1_change = 0
-                    
+
         if x1 >= dis_width or x1 < 0 or y1 >= dis_height or y1 < 0:
             game_close = True
         x1 += x1_change
@@ -194,7 +196,7 @@ def gameLoop():
         dis.fill(blue)
 
         # Check if score is greater than or equal to 25 to switch images
-        if Length_of_snake - 1 >= 5 and current_food_increase_images != food_increase_images_2:
+        if Length_of_snake - 1 >= 25 and current_food_increase_images != food_increase_images_2:
             current_food_increase_images = food_increase_images_2
             display_ingest_message = True  # Trigger the display of the "Ingest complete" message
             ingest_message_start_time = pygame.time.get_ticks()  # Record the time the message is shown
@@ -202,7 +204,7 @@ def gameLoop():
         # Display "Ingest complete" message for 3 seconds
         if display_ingest_message:
             if pygame.time.get_ticks() - ingest_message_start_time < 3000:  # 3000 milliseconds = 3 seconds
-                message("Ingest complete. Keep it accessible!", green, -200)
+                message("Ingest complete. Keep it accessible!", green, dis_width - 400, 20)
             else:
                 display_ingest_message = False  # Stop displaying the message after 3 seconds
 
