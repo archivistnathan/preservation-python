@@ -1,6 +1,6 @@
 # Welcome to Preservation Python
 
-_Preservation Python is a snake-type game where the player controls a continually shrinking python, a metaphor for obsolescence and data loss. The python must ingest, pun intended, content and preservation information while avoiding elements that accelerate data loss. If the python survives a certain length of time, the required elements will change into preservation actions needed to maintain continued access._
+_Preservation Python is a snake-type game where the player controls a continually shrinking python (though you might not alway notice!), a metaphor for obsolescence and data loss. The python must ingest, pun intended, content and preservation information while avoiding elements that accelerate data loss. If the python survives a certain length of time, the required elements will change into preservation actions needed to maintain continued access._
 
 _The game is meant to introduce the elements of an OAIS Archival Information Package to beginners in a fun and interactive way, as well as to present digital preservation as a continuous activity. The fast-paced nature of a snake game also encourages the player to make decisions on which elements they prefer to prioritise._
 
