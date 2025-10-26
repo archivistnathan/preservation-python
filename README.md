@@ -62,15 +62,25 @@ __The game ends when your score goes below 1.__
 
 ## Installations
 
-Download preservation.py and the iamges folder.
+Download preservation.py and the images folder.
 
 Make sure you have Python3 installed. Add pygame using pip3.
 
-Navigate to the folder containing preservation.py and run with Python3.
+Navigate to the folder containing `preservation.py` and run with Python3.
 
 Enjoy!
 
-## Credits:
+### Generation of an executable (tested in Windows)
+
+In order to generate a `preservation-python.exe`, you need to:
+
+- add pyinstaller using pip3
+
+- run `pyinstaller preservation.spec`
+
+- the executable will be generated in the `dist` directory
+
+## Credits
 
 The base code is adapted from Snake Game by Edureka. I wouldn't have figured out food collisions otherwise!
 

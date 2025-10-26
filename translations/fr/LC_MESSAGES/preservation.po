@@ -1,0 +1,129 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR ORGANIZATION
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"POT-Creation-Date: 2025-10-08 11:30+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: pygettext.py 1.5\n"
+
+
+#: preservation.py:46
+msgid "Preservation Python, Adapted from Snake Game by Edureka"
+msgstr "Le Python Préservationniste, adapté du jeu Snake par Edureka"
+
+#: preservation.py:47
+msgid "Your Score: "
+msgstr "Votre score : "
+
+#: preservation.py:74
+msgid "Access rights"
+msgstr "Droits d'accès"
+
+#: preservation.py:75
+msgid "Checksum"
+msgstr "Intégrité"
+
+#: preservation.py:76
+msgid "Context information"
+msgstr "Information de contexte"
+
+#: preservation.py:77
+msgid "Data object"
+msgstr "Objet-donnée"
+
+#: preservation.py:78
+msgid "Metadata"
+msgstr "Métadonnées"
+
+#: preservation.py:83
+msgid "Backup"
+msgstr "Sauvegarde"
+
+#: preservation.py:84
+msgid "Emulation"
+msgstr "Émulation"
+
+#: preservation.py:85
+msgid "Migration"
+msgstr "Migration"
+
+#: preservation.py:86
+msgid "Refresh"
+msgstr "Rafraîchissement"
+
+#: preservation.py:87
+msgid "Tech watch"
+msgstr "Veille technologique"
+
+#: preservation.py:92
+msgid "Broken hardware"
+msgstr "Panne matérielle"
+
+#: preservation.py:93
+msgid "Accidental deletion"
+msgstr "Supression accidentelle"
+
+#: preservation.py:94
+msgid "Legal issues"
+msgstr "Problèmes juridiques"
+
+#: preservation.py:95
+msgid "Obsolescence"
+msgstr "Obsolescence"
+
+#: preservation.py:96
+msgid "Lack of organizational commitment"
+msgstr "Manque d'engagement organisationnel"
+
+#: preservation.py:97
+msgid "Software bugs"
+msgstr "Bugs logiciels"
+
+#: preservation.py:98
+msgid "Virus attack"
+msgstr "Piratage informatique"
+
+#: preservation.py:166
+msgid "Welcome to Preservation Python!"
+msgstr "Bienvenue dans 'Le Python Préservationniste' !"
+
+#: preservation.py:167
+msgid "Collect preservation information."
+msgstr "Récupérez l'information de préservation"
+
+#: preservation.py:168
+msgid "Avoid data loss and obsolescence."
+msgstr "Évitez les pertes de données et l'obsolescence"
+
+#: preservation.py:169
+msgid "Maintain accessibility!"
+msgstr "Maintenez l'accès !"
+
+#: preservation.py:170
+msgid "Use the arrow keys or W,A,S,D to move."
+msgstr "Utilisez les flèches pour vous déplacer"
+
+#: preservation.py:165
+msgid "Press the SPACEBAR to start"
+msgstr "Appuyez sur la barre d'espace pour commencer"
+
+#: preservation.py:187
+msgid "Preservation Failure! The digital object is lost."
+msgstr "Erreur de préservation ! Les objets numériques sont perdus."
+
+#: preservation.py:188
+msgid "Press R to Play Again or Q to Quit"
+msgstr "Appuyez sur R pour rejouer ou Q pour quitter."
+
+#: preservation.py:210
+msgid "Ingest complete. Keep it accessible!"
+msgstr "Versement complet. Maintenez-le accessible !"
+

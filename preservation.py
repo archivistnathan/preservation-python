@@ -1,260 +1,384 @@
+import gettext
+import locale
+import os
 import pygame
-import time
 import random
+from snake import Direction, Snake
 
+__appname__ = "Preservation Python"
+__version__ = "1.0.0"
+
+
+def resource_path(relative_path: str):
+    """To handle external resources within exe package"""
+    bundle_dir = os.path.abspath(os.path.dirname(__file__))
+    path_to_data = os.path.join(bundle_dir, relative_path)
+    return path_to_data
+
+
+# Initialize gettext
+__domain__ = "preservation"
+__locale_dir__ = "translations"
+# Set up message catalog access for translations
+# Retrieve the current locale
+current_locale, encoding = locale.getlocale()
+assert current_locale is not None, "Could not determine the current locale."
+# Load the appropriate translation based on the current locale
+lang = gettext.translation(
+    __domain__,
+    localedir=resource_path(__locale_dir__),
+    languages=[current_locale, "en"],
+    fallback=True,
+)
+# lang.install()
+_ = lang.gettext
+# print(f"Loaded translation for locale: {current_locale}")
+
+# Initialize pygame
 pygame.init()
 
+# Define colors
 white = (255, 255, 255)
 yellow = (255, 255, 102)
 black = (0, 0, 0)
 red = (213, 50, 80)
 green = (0, 255, 0)
 blue = (50, 153, 213)
+purple = (128, 0, 128)
 red_background = (255, 0, 0)
 white_background = (255, 255, 255)
 
 # Define screen dimensions
-dis_width = 1200
-dis_height = 800
-
-dis = pygame.display.set_mode((dis_width, dis_height))
-pygame.display.set_caption('Preservation Python, Adapted from Snake Game by Edureka')
-
+screen_width, screen_height = 1200, 800
+block_size = 40
+screen = pygame.display.set_mode((screen_width, screen_height))
+pygame.display.set_caption(_("Preservation Python, Adapted from Snake Game by Edureka"))
+prefix_score = _("Your Score: ")
+bottom_message = ""
 clock = pygame.time.Clock()
 
-snake_block = 40
-snake_speed = 10
 
+nb_items_for_ingest = 20
+
+display_message_time = 3000  # milliseconds = 3 seconds
 font_style = pygame.font.SysFont("arial", 25)
 score_font = pygame.font.SysFont("timesnewroman", 20)
+bottom_font = pygame.font.SysFont("couriernew", 30)
+
 
 # Load and scale the images for the food items
 def load_and_scale_image(image_name):
-    img = pygame.image.load(f'images/{image_name}')
-    img = pygame.transform.scale(img, (snake_block, snake_block))
+    img = pygame.image.load(resource_path(f"images/{image_name}")).convert_alpha()
+    img = pygame.transform.scale(img, (block_size, block_size))
     return img
+
+
+# Define a enumeration for food types
+class FoodType:
+    INCREASE = 1
+    DECREASE = 2
+
 
 # Initial set of images for food that increases the score
 food_increase_images_1 = [
-    load_and_scale_image('accessrights.png'),
-    load_and_scale_image('checksum.png'),
-    load_and_scale_image('context.png'),
-    load_and_scale_image('dataobject.png'),
-    load_and_scale_image('metadata.png')
+    (load_and_scale_image("accessrights.png"), _("Access rights")),
+    (load_and_scale_image("checksum.png"), _("Checksum")),
+    (load_and_scale_image("context.png"), _("Context information")),
+    (load_and_scale_image("dataobject.png"), _("Data object")),
+    (load_and_scale_image("metadata.png"), _("Metadata")),
 ]
 
-# New set of images after score reaches 25
+# New set of images after score reaches 'nb_items_for_ingest'
 food_increase_images_2 = [
-    load_and_scale_image('backup.png'),
-    load_and_scale_image('emulation.png'),
-    load_and_scale_image('migration.png'),
-    load_and_scale_image('refresh.png'),
-    load_and_scale_image('techwatch.png')
+    (load_and_scale_image("backup.png"), _("Backup")),
+    (load_and_scale_image("emulation.png"), _("Emulation")),
+    (load_and_scale_image("migration.png"), _("Migration")),
+    (load_and_scale_image("refresh.png"), _("Refresh")),
+    (load_and_scale_image("techwatch.png"), _("Tech watch")),
 ]
 
 # Images for food that decreases the score
 food_decrease_images = [
-    load_and_scale_image('brokenhardware.png'),
-    load_and_scale_image('delete.png'),
-    load_and_scale_image('legal.png'),
-    load_and_scale_image('obsolete.png'),
-    load_and_scale_image('orgcommitment.png'),
-    load_and_scale_image('softwarebug.png'),
-    load_and_scale_image('virus.png')
+    (load_and_scale_image("brokenhardware.png"), _("Broken hardware")),
+    (load_and_scale_image("delete.png"), _("Accidental deletion")),
+    (load_and_scale_image("legal.png"), _("Legal issues")),
+    (load_and_scale_image("obsolete.png"), _("Obsolescence")),
+    (load_and_scale_image("orgcommitment.png"), _("Lack of organizational commitment")),
+    (load_and_scale_image("softwarebug.png"), _("Software bugs")),
+    (load_and_scale_image("virus.png"), _("Virus attack")),
 ]
 
 # Timer for spawning new food
 food_timer = pygame.time.get_ticks()  # Initialize timer
-last_food_type = 'increase'  # Track the last food type
+last_food_type = FoodType.INCREASE  # Track the last food type
 
 # List to store food items
 food_items = []
 
-# Function to display score
-def Your_score(score):
-    value = score_font.render("Your Score: " + str(score), True, yellow)
-    dis.blit(value, [0, 0])
-
-# Function to draw the snake
-def our_snake(snake_block, snake_list):
-    for x in snake_list:
-        pygame.draw.rect(dis, black, [x[0], x[1], snake_block, snake_block])
 
 # Function to display messages
 def message(msg, color, y_displace=0):
     mesg = font_style.render(msg, True, color)
-    dis.blit(mesg, [dis_width / 3, dis_height / 3 + y_displace])
+    screen.blit(mesg, [screen_width / 3, screen_height / 3 + y_displace])
+
+
+def verify_new_food_position(new_x, new_y):
+    """Ensure new food does not spawn on other food items."""
+    for food_x, food_y, _, _, _ in food_items:
+        if new_x == food_x and new_y == food_y:
+            return False
+    return True
+
+
+def food_random_position():
+    """Generate a random position for food."""
+    valid_position = False
+    while not valid_position:
+        food_x = (
+            round(random.randrange(0, screen_width - block_size) / block_size)
+            * block_size
+        )
+        food_y = (
+            round(random.randrange(0, screen_height - block_size) / block_size)
+            * block_size
+        )
+        valid_position = verify_new_food_position(food_x, food_y)
+    return food_x, food_y
+
 
 # Function to spawn food
 def spawn_food(food_type=None, current_food_increase_images=None):
     global last_food_type
     if food_type is None:
-        foodx = round(random.randrange(0, dis_width - snake_block) / snake_block) * snake_block
-        foody = round(random.randrange(0, dis_height - snake_block) / snake_block) * snake_block
-        if last_food_type == 'increase':
-            food_type = 'decrease'
+        food_x, food_y = food_random_position()
+        if last_food_type == FoodType.INCREASE:
+            food_type = FoodType.DECREASE
         else:
-            food_type = 'increase'
+            food_type = FoodType.INCREASE
         last_food_type = food_type
     else:
-        foodx = round(random.randrange(0, dis_width - snake_block) / snake_block) * snake_block
-        foody = round(random.randrange(0, dis_height - snake_block) / snake_block) * snake_block
+        food_x, food_y = food_random_position()
         last_food_type = food_type
 
     # Choose a specific image based on the food type
-    if food_type == 'increase':
-        image = random.choice(current_food_increase_images)
+    if food_type == FoodType.INCREASE and current_food_increase_images is not None:
+        image, food_text = random.choice(current_food_increase_images)
     else:
-        image = random.choice(food_decrease_images)
+        image, food_text = random.choice(food_decrease_images)
 
-    food_items.append((foodx, foody, food_type, image))
+    food_items.append((food_x, food_y, food_type, image, food_text))
 
-# Main game loop
-def gameLoop():
-    global food_timer  # Use the global timer variable
-    global dis_width, dis_height  # Ensure these are available
 
-    game_over = False
-    game_close = False
-
-    x1 = dis_width / 2
-    y1 = dis_height / 2
-
-    x1_change = 0
-    y1_change = 0
-
-    snake_List = []
-    Length_of_snake = 1
-
-    current_food_increase_images = food_increase_images_1  # Start with the initial set of images
-    display_ingest_message = False  # Track whether "Ingest complete" message should be displayed
-    ingest_message_start_time = 0  # Store the time when the message is displayed
-
-    spawn_food('increase', current_food_increase_images)  # Spawn initial food item that increases score
-
-    # Instructions screen before the game starts
+def show_game_start_screen():
+    """
+    Display the game start screen with instructions.
+    Returns True if the game should start, False if it should exit.
+    """
     game_start = False
     while not game_start:
-        dis.fill(blue)
-        message("Welcome to Preservation Python!", white, -200)
-        message("Collect preservation information.", white, -100)
-        message("Avoid data loss and obsolescence.", white)
-        message("Maintain accessibility!", white, 100)
-        message("Use the arrow keys or W,A,S,D to move.", yellow, 200)
-        message("Press the SPACEBAR to start", green, 250)
-
+        screen.fill(blue)
+        message(_("Welcome to Preservation Python!"), white, -200)
+        message(_("Collect preservation information."), white, -100)
+        message(_("Avoid data loss and obsolescence."), white)
+        message(_("Maintain accessibility!"), white, 100)
+        message(_("Use the arrow keys or W,A,S,D to move."), yellow, 200)
+        message(_("Press the SPACEBAR to start"), green, 250)
         pygame.display.update()
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                pygame.quit()
-                quit()
+                return False
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_SPACE:
                     game_start = True
 
         clock.tick(15)  # Control the frame rate of the instructions screen
+    return True
 
-    while not game_over:
-        while game_close:
-            dis.fill(blue)
-            message("Preservation Failure! The digital object is lost.", red)
-            message("Press R to Play Again or Q to Quit", green, +50)
-            Your_score(Length_of_snake - 1)  # Update the score display
-            pygame.display.update()
 
-            for event in pygame.event.get():
-                if event.type == pygame.KEYDOWN:
-                    if event.key == pygame.K_q:
-                        game_over = True
-                        game_close = False
-                    if event.key == pygame.K_r:
-                        gameLoop()
+def show_game_over_screen(score):
+    """
+    Display the game over screen with options to restart or quit.
+    Returns True if the game should be restarted, False if it should exit.
+    """
+    game_over_screen = True
+    while game_over_screen:
+        screen.fill(blue)
+        message(_("Preservation Failure! The digital object is lost."), red, -100)
+        message(prefix_score + str(score), red, -50)
+        message(_("Press R to Play Again or Q to Quit"), green, 50)
+        pygame.display.update()
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                game_over = True
+                return False
             if event.type == pygame.KEYDOWN:
-                # Handle arrow keys and W,A,S,D keys
-                if event.key == pygame.K_LEFT or event.key == pygame.K_a:
-                    x1_change = -snake_block
-                    y1_change = 0
-                elif event.key == pygame.K_RIGHT or event.key == pygame.K_d:
-                    x1_change = snake_block
-                    y1_change = 0
-                elif event.key == pygame.K_UP or event.key == pygame.K_w:
-                    y1_change = -snake_block
-                    x1_change = 0
-                elif event.key == pygame.K_DOWN or event.key == pygame.K_s:
-                    y1_change = snake_block
-                    x1_change = 0
+                if event.key == pygame.K_q:
+                    return False
+                if event.key == pygame.K_r:
+                    return True
 
-        if x1 >= dis_width or x1 < 0 or y1 >= dis_height or y1 < 0:
+        clock.tick(15)  # Control the frame rate of the game over screen
+
+
+def show_ingest_complete_message(ingest_message_start_time):
+    """
+    Display the "Ingest complete" message for 3 seconds.
+    """
+    if pygame.time.get_ticks() - ingest_message_start_time < display_message_time:
+        msg = _("Ingest complete. Keep it accessible!")
+        mesg = font_style.render(msg, True, green)
+        screen.blit(mesg, [screen_width - mesg.get_width() - 20, 20])
+        return True
+    else:
+        # Stop displaying the message after 3 seconds
+        return False
+
+
+def draw_food_items():
+    """
+    Draw all food items on the screen."""
+    for food_x, food_y, food_type, image, _ in food_items:
+        if food_type == FoodType.INCREASE:
+            pygame.draw.rect(
+                screen, white_background, [food_x, food_y, block_size, block_size]
+            )
+        else:
+            pygame.draw.rect(
+                screen, red_background, [food_x, food_y, block_size, block_size]
+            )
+        # Draw the image on top of the background
+        screen.blit(image, (food_x, food_y))
+
+
+def show_bottom(bottom_message_start_time):
+    """
+    Display the bottom message on the screen."""
+    global bottom_message
+    if bottom_message and len(bottom_message) > 0:
+        if pygame.time.get_ticks() - bottom_message_start_time < display_message_time:
+            mesg = bottom_font.render(bottom_message, True, purple)
+            width = mesg.get_width()
+            screen.blit(mesg, [(screen_width - width) // 2, screen_height - 30])
+        else:
+            # Clear the message after 3 seconds
+            bottom_message = ""
+
+
+# Main game loop
+def gameLoop(dis_width, dis_height, food_timer):
+    """
+    Main game loop.
+
+    Returns True if the game should be restarted, False if it should exit.
+    """
+    global bottom_message
+
+    game_over = False
+    game_close = False
+
+    direction = Direction.STILL
+
+    snake = Snake(dis_width / 2, dis_height / 2, yellow)
+
+    # Start with the initial set of images
+    current_food_increase_images = food_increase_images_1
+    # Track whether "Ingest complete" message should be displayed
+    display_ingest_message = False
+    # Store the time when the message is displayed
+    ingest_message_start_time = 0
+    bottom_message_start_time = 0
+    # Spawn initial food item that FoodType.INCREASEs score
+    spawn_food(FoodType.INCREASE, current_food_increase_images)
+
+    # Instructions screen before the game starts
+    if not show_game_start_screen():
+        return False
+
+    # Main game loop
+    while not game_over:
+        if game_close:
+            return show_game_over_screen(snake.score)
+
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                return False
+            if event.type == pygame.KEYDOWN:
+                direction = snake.handle(event)
+        snake.move(direction)
+        # Check for boundary collisions
+        if snake.out_of_bounds(dis_width, dis_height):
             game_close = True
-        x1 += x1_change
-        y1 += y1_change
-        dis.fill(blue)
+            continue  # Skip the rest of the loop to avoid drawing out of bounds
+        screen.fill(blue)
 
-        # Check if score is greater than or equal to 25 to switch images
-        if Length_of_snake - 1 >= 25 and current_food_increase_images != food_increase_images_2:
+        # Check if score is greater than or equal to 'nb_items_for_ingest' to switch images
+        if (
+            snake.length - 1 >= nb_items_for_ingest
+            and current_food_increase_images != food_increase_images_2
+        ):
             current_food_increase_images = food_increase_images_2
-            display_ingest_message = True  # Trigger the display of the "Ingest complete" message
-            ingest_message_start_time = pygame.time.get_ticks()  # Record the time the message is shown
+            # Trigger the display of the "Ingest complete" message
+            display_ingest_message = True
+            # Record the time the message is shown
+            ingest_message_start_time = pygame.time.get_ticks()
 
         # Display "Ingest complete" message for 3 seconds
         if display_ingest_message:
-            if pygame.time.get_ticks() - ingest_message_start_time < 3000:  # 3000 milliseconds = 3 seconds
-                message("Ingest complete. Keep it accessible!", green, dis_width - 400, 20)
-            else:
-                display_ingest_message = False  # Stop displaying the message after 3 seconds
+            display_ingest_message = show_ingest_complete_message(
+                ingest_message_start_time
+            )
 
         # Check timer to spawn new food every 10 seconds
-        if pygame.time.get_ticks() - food_timer > 10000:  # 10,000 milliseconds = 10 seconds
-            spawn_food('decrease')  # Spawn a food item that decreases score
+        if (
+            pygame.time.get_ticks() - food_timer > 10000
+        ):  # 10,000 milliseconds = 10 seconds
+            # Spawn a food item that decreases score
+            spawn_food(FoodType.DECREASE)
             food_timer = pygame.time.get_ticks()  # Reset timer
 
-        snake_Head = []
-        snake_Head.append(x1)
-        snake_Head.append(y1)
-        snake_List.append(snake_Head)
-        if len(snake_List) > Length_of_snake:
-            del snake_List[0]
+        snake.update()
+        if snake.self_collision():
+            game_close = True
+            continue  # Skip the rest of the loop if game is over
 
-        for x in snake_List[:-1]:
-            if x == snake_Head:
-                game_close = True
-
-        our_snake(snake_block, snake_List)
-        Your_score(Length_of_snake - 1)  # Update the score display
+        snake.draw(screen)
+        # Update the score display
+        snake.show_score(screen, score_font, prefix_score, yellow)
 
         # Draw all food items
-        for (foodx, foody, food_type, image) in food_items:
-            if food_type == 'increase':
-                pygame.draw.rect(dis, white_background, [foodx, foody, snake_block, snake_block])
-            else:
-                pygame.draw.rect(dis, red_background, [foodx, foody, snake_block, snake_block])
-            # Draw the image on top of the background
-            dis.blit(image, (foodx, foody))
+        draw_food_items()
 
         # Check collision with each food item
-        for i, (foodx, foody, food_type, _) in enumerate(food_items):
-            if x1 == foodx and y1 == foody:
-                if food_type == 'increase':
-                    Length_of_snake += 1
-                    spawn_food('increase', current_food_increase_images)  # Spawn new food item
-                elif food_type == 'decrease':
-                    Length_of_snake = max(1, Length_of_snake // 2)  # Halve the snake's length, ensuring it doesn't go below 1
-                    if Length_of_snake <= 1:
+        for i, (food_x, food_y, food_type, _, food_text) in enumerate(food_items):
+            if snake.collide(food_x, food_y):
+                if food_type == FoodType.INCREASE:
+                    bottom_message = food_text
+                    bottom_message_start_time = pygame.time.get_ticks()
+                    snake.grow()  # Increase the snake's length
+                    spawn_food(
+                        FoodType.INCREASE, current_food_increase_images
+                    )  # Spawn new food item
+                elif food_type == FoodType.DECREASE:
+                    bottom_message = food_text
+                    bottom_message_start_time = pygame.time.get_ticks()
+                    if snake.shrink():
                         game_close = True
                 del food_items[i]  # Remove the food item after collision
                 break
 
-        Your_score(Length_of_snake - 1)  # Ensure the score updates immediately after eating
+        # Ensure the score updates immediately after eating
+        snake.show_score(screen, score_font, prefix_score, yellow)
+        show_bottom(bottom_message_start_time)
         pygame.display.update()
 
-        clock.tick(snake_speed)
+        clock.tick(Snake.SPEED)
+    return False
 
-    pygame.quit()
-    quit()
 
-gameLoop()
+# Start the game loop
+while True:
+    food_items = []  # Reset food items for each game loop
+    if not gameLoop(screen_width, screen_height, food_timer):
+        pygame.quit()
+        break
